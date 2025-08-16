@@ -1,4 +1,4 @@
-import { useSignUpEmailPassword } from '@nhost/react';
+import { useSignUpEmailPassword, useAuthenticationStatus } from '@nhost/react';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTheme } from '@/hooks/use-theme';
 import { Moon, Sun } from 'lucide-react';
+import nhost from '@/lib/nhost';
 
 export default function SignupPage() {
   const {theme , setTheme} = useTheme();
@@ -15,6 +16,14 @@ export default function SignupPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuthenticationStatus();
+
+  //redirect if the user is already authenticatd..
+  useEffect(()=>{
+    if(isAuthenticated){
+      navigate('/chat', { replace: true });
+    }
+  },[isAuthenticated, navigate])
 
   // Show a toast notification when an error occurs
   useEffect(() => {
@@ -34,6 +43,10 @@ export default function SignupPage() {
   const handleSignup = async (e) => {
     e.preventDefault();
     await signUpEmailPassword({ email: email.trim(), password });
+  };
+
+  const handleGoogleSignIn = async () => {
+    await nhost.auth.signIn({ provider: 'google' });
   };
 
  return (
@@ -109,6 +122,16 @@ export default function SignupPage() {
               className="w-full flex items-center justify-center font-mono bg-black text-white hover:bg-muted hover:text-foreground" 
               disabled={isLoading}>
                 {isLoading ? "Logging in..." : "Sign in"}
+              </Button>
+              <Button
+              variant={"outline"}
+              type='button'
+              className="w-full flex items-center justify-center font-mono bg-black text-white hover:bg-muted hover:text-foreground"
+              onClick={handleGoogleSignIn}
+              >
+
+                <img className="w-4 h-4 mr-2" src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google logo" />
+                Sign Up with Google
               </Button>
             </form>
             <div className="mt-4 text-center text-sm">

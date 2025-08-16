@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTheme } from '@/hooks/use-theme';
 import { Sun, Moon } from 'lucide-react';
-import { Image } from 'lucide-react';
+
 export default function LoginPage() {
   const {theme , setTheme} = useTheme();
   const { signInEmailPassword, isLoading, error } = useSignInEmailPassword();
