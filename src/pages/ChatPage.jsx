@@ -44,16 +44,24 @@ export default function ChatPage() {
       {/* Content */}
       {/* Resizable Panel Layout */}
       <PanelGroup direction="horizontal" className="flex-1 overflow-hidden">
-        <Panel defaultSize={25} minSize={20} className="flex flex-col">
+
+        {/* Sidebar only visible on large screens */}
+        <Panel 
+         defaultSize={25} 
+         minSize={20} 
+         className="flex flex-col">
           <Sidebar selectedChatId={selectedChatId} onSelect={setSelectedChatId} />
         </Panel>
+        
         <PanelResizeHandle className="w-1 bg-border hover:bg-primary/20 transition-colors" />
         <Panel defaultSize={75} minSize={30} className="flex flex-col">
           <ChatWindow 
             chatId={selectedChatId} 
             hasChats={hasChats}
             isBotReplying={isBotReplying} 
+            setIsBotReplying={setIsBotReplying}
           />
+        
           {selectedChatId && (
             <ChatInput 
               chatId={selectedChatId}

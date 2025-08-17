@@ -12,7 +12,7 @@ export default function ChatInput({ chatId , setIsBotReplying }){
     });
 
     const[callAction , {loading:calling}] = useMutation(SEND_MESSAGE_ACTION , {
-      onCompleted:()=>setIsBotReplying(false),
+      // onCompleted:()=>setIsBotReplying(false),
       onError:()=>{
         setIsBotReplying(false)
         toast.error("Error sending message")

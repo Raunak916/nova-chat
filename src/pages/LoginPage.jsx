@@ -48,7 +48,7 @@ export default function LoginPage() {
     >
 
       {/* Left side with background image */}
-      <div className=" w-full lg:w-1/2 bg-background/60 ">
+      <div className="hidden lg:flex w-1/2 bg-background/60 transition-all duration-500 ease-in-out">
         <div className='absolute top-5 left-5 flex flex-col '>
           <div className=' flex items-center space-x-2 '>
            <img src="/nova-lightLogo.svg" className="w-10 h-10" />
@@ -61,11 +61,17 @@ export default function LoginPage() {
       </div>
 
       {/* Right side with login form */}
-       <div className="ml-auto flex w-full lg:w-1/2 justify-center items-center bg-background/60 backdrop-blur-md">
+       <div className="flex w-full lg:w-1/2 justify-center items-center bg-background/60 backdrop-blur-md px-4 transition-all duration-500 ease-in-out">
         <Card 
           className="w-full max-w-md shadow-xl border-0 rounded-2xl font-mono"
           style={{ background: 'color-mix(in srgb, var(--card) 75%, transparent)' }}>
           <CardHeader className='relative'>
+            {/* Logo for mobile top  */}
+          <div className="flex flex-col items-center mb-4 lg:hidden">
+            <img src="/nova-lightLogo.svg" className="w-12 h-12" />
+            <span className="font-bold text-xl font-special-gothic">NOVA chat</span>
+            <span className="text-sm text-muted-foreground">Your AI Chat Companion</span>
+          </div>
             <Button 
              onClick={()=>(setTheme(theme === 'light' ? "dark" : "light"))}
              className='absolute top-2 right-2 p-2 rounded-md hover:bg-muted transition hover:text-muted-foreground'
