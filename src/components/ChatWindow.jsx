@@ -10,10 +10,12 @@ import { useScroll } from "@/hooks/use-scroll";
 import { cn } from "@/lib/utils";
 
 
-export default function ChatWindow({ chatId , hasChats , isBotReplying}) {
+
+export default function ChatWindow({ chatId , hasChats , isBotReplying, setIsBotReplying}) {
     const { isAuthenticated } = useAuthenticationStatus();
     const messagesEndRef = useRef(null);
     const scrollContainerRef = useRef(null);
+    const timeoutRef = useRef(null);//because it keeps the value in rerender loop
     const { data, loading, error} = useSubscription(SUBSCRIBE_MESSAGES,
         {
             variables:{
@@ -25,8 +27,40 @@ export default function ChatWindow({ chatId , hasChats , isBotReplying}) {
     
     // This useEffect will handle auto-scrolling
         useEffect(() => {
+         
+
           messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-        }, [data, isBotReplying]);
+
+           
+          //clearing any existing timeout 
+           if (timeoutRef.current) {
+             clearTimeout(timeoutRef.current);
+           }            
+          
+
+          if(isBotReplying){
+            timeoutRef.current = setTimeout(() => {
+              toast.error("Bot is taking too long to reply. Please try again.");
+              setIsBotReplying(false);
+            }, 8000);
+          }
+
+          if(isBotReplying && data?.messages?.length > 0){
+            const lastMessage = data.messages[data.messages.length - 1];
+
+            if(lastMessage.sender === "bot"){
+              clearTimeout(timeoutRef.current);
+              //ek delay hoga jab bot ka reply aa jayega
+              setTimeout(() => {
+                setIsBotReplying(false);
+              }, 400);
+            }
+          }
+
+          return () => {
+            clearTimeout(timeoutRef.current);
+          }
+        }, [data, isBotReplying, setIsBotReplying]);
 
     // This useEffect will show a toast on error
     useEffect(() => {
